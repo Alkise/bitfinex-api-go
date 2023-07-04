@@ -38,7 +38,7 @@ func getWallets(c *rest.Client) {
 }
 
 func transfer(c *rest.Client) {
-	notfication, err := c.Wallet.Transfer("exchange", "margin", "BTC", "BTC", 0.001)
+	notfication, err := c.Wallet.Transfer("exchange", "margin", "BTC", "BTC", 0.001, nil, nil)
 	if err != nil {
 		log.Fatalf("transfer %s", err)
 	}

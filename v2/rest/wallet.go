@@ -36,13 +36,15 @@ func (s *WalletService) Wallet() (*wallet.Snapshot, error) {
 
 // Submits a request to transfer funds from one Bitfinex wallet to another
 // see https://docs.bitfinex.com/reference#transfer-between-wallets for more info
-func (ws *WalletService) Transfer(from, to, currency, currencyTo string, amount float64) (*notification.Notification, error) {
+func (ws *WalletService) Transfer(from, to, currency, currencyTo string, amount float64, emailDst *string, userIdDst *int32) (*notification.Notification, error) {
 	body := map[string]interface{}{
 		"from":        from,
 		"to":          to,
 		"currency":    currency,
 		"currency_to": currencyTo,
 		"amount":      strconv.FormatFloat(amount, 'f', -1, 64),
+		"email_dst":   emailDst,
+		"user_id_dst": userIdDst,
 	}
 	req, err := ws.requestFactory.NewAuthenticatedRequestWithData(common.PermissionWrite, "transfer", body)
 	if err != nil {
