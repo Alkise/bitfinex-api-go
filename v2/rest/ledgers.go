@@ -41,3 +41,27 @@ func (s *LedgerService) Ledgers(currency string, start int64, end int64, max int
 
 	return lss, nil
 }
+
+func (s *LedgerService) LedgersAllCurrencies(start, end int64, max int32) (*ledger.Snapshot, error) {
+	if max > maxLimit {
+		return nil, fmt.Errorf("Max request limit: %d, got: %d", maxLimit, max)
+	}
+
+	payload := map[string]interface{}{"start": start, "end": end, "limit": max}
+	req, err := s.requestFactory.NewAuthenticatedRequestWithData(common.PermissionRead, path.Join("ledgers", "hist"), payload)
+	if err != nil {
+		return nil, err
+	}
+
+	raw, err := s.Request(req)
+	if err != nil {
+		return nil, err
+	}
+
+	lss, err := ledger.SnapshotFromRaw(raw, ledger.FromRaw)
+	if err != nil {
+		return nil, err
+	}
+
+	return lss, nil
+}
